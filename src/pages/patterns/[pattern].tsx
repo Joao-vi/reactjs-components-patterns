@@ -6,7 +6,7 @@ import { ROUTES } from '../../routes'
 
 
 
-const Patterns: NextPage<{ pattern: string }> = ({ pattern }) => {
+const Patterns: NextPage<{ pattern: string, code: string }> = ({ pattern, code }) => {
     const [Component, setComponent] = useState()
 
     useLayoutEffect(() => {
@@ -20,7 +20,7 @@ const Patterns: NextPage<{ pattern: string }> = ({ pattern }) => {
         <>
             {Component}
 
-            <a className='cursor-pointer p-3 py-2 font-bold rounded-lg bg-primary text-black hover:bg-[#f0b753] transition-colors'>Code</a>
+            <a href={code} target='__blank' className='cursor-pointer p-3 py-2 font-bold rounded-lg bg-primary text-black hover:bg-[#f0b753] transition-colors'>Code</a>
         </>
     )
 }
@@ -37,9 +37,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const { pattern } = context.params || { pattern: 'HOC' };
+    const code = ROUTES.find(route => route.pattern === pattern)?.code
+
 
     return {
-        props: { pattern, },
+        props: { pattern, code },
     }
 }
 

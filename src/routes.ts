@@ -3,7 +3,7 @@ export const ROUTES = [
     label: "Base",
     to: "/",
     pattern: "base",
-    code: "",
+    code: "https://github.com/Joao-vi/reactjs-components-patterns/blob/main/src/patterns/base.tsx",
   },
   {
     label: "HOC",
