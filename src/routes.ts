@@ -9,12 +9,12 @@ export const ROUTES = [
     label: "HOC",
     to: "/patterns/HOC",
     pattern: "HOC",
-    code: "",
+    code: "https://github.com/Joao-vi/reactjs-components-patterns/blob/main/src/patterns/HOC.tsx",
   },
   {
     label: "Hook",
     to: "/patterns/hook",
     pattern: "hook",
-    code: "",
+    code: "https://github.com/Joao-vi/reactjs-components-patterns/blob/main/src/patterns/hook.tsx",
   },
 ];
