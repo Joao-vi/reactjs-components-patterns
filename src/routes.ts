@@ -20,4 +20,11 @@ export const ROUTES = [
     code: "https://github.com/Joao-vi/reactjs-components-patterns/blob/main/src/patterns/hook.tsx",
     title: "Animated via Hook",
   },
+  {
+    label: "Compound Components",
+    to: "/patterns/compound-components",
+    pattern: "compound-components",
+    code: "https://github.com/Joao-vi/reactjs-components-patterns/blob/main/src/patterns/hook.tsx",
+    title: "",
+  },
 ];

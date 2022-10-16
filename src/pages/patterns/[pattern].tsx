@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -15,7 +15,7 @@ interface PatterProps {
 const Patterns: NextPage<PatterProps> = ({ pattern, code, title }) => {
     const [Component, setComponent] = useState()
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         import(`../../patterns/${pattern}`).then(mod => setComponent(mod.default))
     }, [pattern])
 

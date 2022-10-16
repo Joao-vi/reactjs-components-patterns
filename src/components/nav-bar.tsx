@@ -4,7 +4,7 @@ import { ROUTES } from '../routes'
 
 const NavBar = () => {
     return (
-        <ul className="flex flex-col gap-3 items-center border-r px-5 border-light-background">
+        <ul className="flex flex-col gap-3 items-stretch text-start border-r px-5 border-light-background">
             {ROUTES.map(route =>
                 <li key={route.to} className="nav-link">
                     <Link href={route.to}>

@@ -1,9 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable import/no-anonymous-default-export */
+/* eslint-disable react/display-name */
+import { createContext, ReactNode, RefObject, useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import mojs from "@mojs/core";
 import useSound from "use-sound";
 
 import { ClapIcon } from "../components/clap-icon";
-import { motion } from "framer-motion";
+
+type TMediumClapContext = {
+    totalCountEl: RefObject<HTMLSpanElement>
+    clapCountEl: RefObject<HTMLSpanElement>
+} & typeof INITIAL_STATE
+
+interface IMediumClap {
+    onClap(count: number): void
+    children: ReactNode
+}
 
 const plopSound = '/sounds/plop.mp3'
 const DURATION = 300;
@@ -16,7 +27,10 @@ const INITIAL_STATE = {
     playbackRate: 0.7,
 };
 
-const MediumClap = () => {
+
+const MediumClapContext = createContext<TMediumClapContext | undefined>(undefined)
+
+const MediumClap = ({ children, onClap }: IMediumClap) => {
     const isFirstMount = useRef(true)
     const { clapState, handleMouseDown, handleMouseUp, handleSetClapState } = useClapState()
     const { count } = clapState
@@ -27,12 +41,16 @@ const MediumClap = () => {
         interrupt: true,
     });
 
+    const value = useMemo(() => ({ ...clapState, clapCountEl, totalCountEl }), [clapState, clapCountEl, totalCountEl])
+
     useEffect(() => {
         if (isFirstMount.current) {
             isFirstMount.current = false;
 
             return
         }
+
+        onClap(count)
 
         if (clapState.count === MAX_CLICKS) {
             play({ playbackRate: 1 });
@@ -46,37 +64,71 @@ const MediumClap = () => {
     }, [count]);
 
     return (
+        <MediumClapContext.Provider value={value}>
 
-        <button
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onClick={handleSetClapState}
-            ref={btnEl}
-            className="relative w-[120px] h-[120px] flex justify-center items-center border border-light-text rounded-full hover-effect"
-        >
-            <ClapIcon
-                className={`w-[70px] stroke-primary ${clapState.isClicked ? "fill-primary" : "fill-[none]"}`}
-            />
-            <span
-                ref={totalCountEl}
-                className="absolute top-[-30px] text-light-text"
+            <button
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onClick={handleSetClapState}
+                ref={btnEl}
+                className="relative w-[120px] h-[120px] flex justify-center items-center border border-light-text rounded-full hover-effect"
             >
-                {clapState.totalCount}
-            </span>
-            <span
-                ref={clapCountEl}
-                className="pointer-events-none aspect-square min-h-[40px] min-w-[40px] p-2 rounded-full bg-primary absolute top-[-60px] flex items-center justify-center text-zinc-800 font-bold"
-            >
-                +{clapState.count}
-            </span>
-        </button>
+                <ClapIcon
+                    className={`w-[70px] stroke-primary ${clapState.isClicked ? "fill-primary" : "fill-[none]"}`}
+                />
+                {children}
+            </button>
+
+        </MediumClapContext.Provider>
     );
 };
 
 
+
 // ========================
-// >> Hook <<
+// >> Sub Components <<
 // ========================
+
+const TotalCount = () => {
+    const { totalCountEl, totalCount } = useMediumClapContext()
+
+    return (
+        <span
+            ref={totalCountEl}
+            className="absolute top-[-30px] text-light-text"
+        >
+            {totalCount}
+        </span>
+    )
+}
+
+const ClapCount = () => {
+    const { clapCountEl, count } = useMediumClapContext()
+
+    return (
+        <span
+            ref={clapCountEl}
+            className="pointer-events-none aspect-square min-h-[40px] min-w-[40px] p-2 rounded-full bg-primary absolute top-[-60px] flex items-center justify-center text-zinc-800 font-bold"
+        >
+            +{count}
+        </span>
+    )
+}
+
+// ========================
+
+
+// ========================
+// >> Hook <<function
+// ========================
+
+const useMediumClapContext = () => {
+    const ctx = useContext(MediumClapContext)
+
+    if (!ctx) throw new Error('MediumClapContext.Provider was not found.')
+
+    return ctx
+}
 
 const useClapAnimation = () => {
     const animate = useRef<any>(null);
@@ -175,10 +227,31 @@ const useClapState = () => {
     }
 }
 
+// ========================
 
 
-export default function Usage() {
 
-    return (<MediumClap />)
+export default () => {
+    function Usage() {
+        const [total, seTotal] = useState(0)
+
+        return (
+            <>
+                <MediumClap onClap={(value) => seTotal(value)}>
+                    <TotalCount />
+                    <ClapCount />
+                </MediumClap>
+
+                {!!total &&
+                    <span
+                        className="italic text-light-text"
+                    >
+                        {`You've clicked ${total} times.`}
+                    </span>
+                }
+            </>
+        )
+    }
+    return <Usage />
 }
 
