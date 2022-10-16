@@ -1,12 +1,18 @@
 import React, { useLayoutEffect, useState } from 'react'
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next'
+import { AnimatePresence, motion } from 'framer-motion'
 
 
 import { ROUTES } from '../../routes'
 
 
+interface PatterProps {
+    pattern: string;
+    code: string;
+    title: string;
+}
 
-const Patterns: NextPage<{ pattern: string, code: string }> = ({ pattern, code }) => {
+const Patterns: NextPage<PatterProps> = ({ pattern, code, title }) => {
     const [Component, setComponent] = useState()
 
     useLayoutEffect(() => {
@@ -17,11 +23,41 @@ const Patterns: NextPage<{ pattern: string, code: string }> = ({ pattern, code }
     if (!Component) return <h1>...</h1>
 
     return (
-        <>
-            {Component}
+        <AnimatePresence mode='wait'>
+            <motion.div
+                key={code}
+                className="flex flex-col items-center gap-3"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+            >
 
-            <a href={code} target='__blank' className='cursor-pointer p-3 py-2 font-bold rounded-lg bg-primary text-black hover:bg-[#f0b753] transition-colors'>Code</a>
-        </>
+                {Component}
+
+                <motion.span
+                    key={pattern}
+                    className="italic text-light-text"
+                    initial={{ y: -5, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1, transition: { delay: .4, ease: "easeOut" } }}
+                    exit={{ opacity: 0 }}
+                >
+                    {title}
+                </motion.span>
+            </motion.div>
+
+
+            <motion.a
+                key={title}
+                initial={{ opacity: 0, scale: .6 }}
+                animate={{ opacity: 1, scale: 1, transition: { delay: .15 } }}
+                exit={{ opacity: 0 }}
+                href={code}
+                target='__blank'
+                className='cursor-pointer p-3 py-2 font-bold rounded-lg bg-primary text-black hover:bg-[#f0b753] transition-colors'
+            >
+                Code
+            </motion.a>
+        </AnimatePresence>
     )
 }
 
@@ -37,11 +73,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const { pattern } = context.params || { pattern: 'HOC' };
-    const code = ROUTES.find(route => route.pattern === pattern)?.code
+    const { title, code } = ROUTES.find(route => route.pattern === pattern)!
 
 
     return {
-        props: { pattern, code },
+        props: { pattern, code, title },
     }
 }
 

@@ -180,18 +180,7 @@ const WithClapAnimation = withClapAnimation(MediumClap)
 
 export default function Usage() {
 
-    return (
-        <motion.div
-            className="flex flex-col items-center gap-3"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-        >
+    return (<WithClapAnimation />)
 
-            <WithClapAnimation />
-
-            <span className="italic text-light-text">Animated via High Order Component</span>
-        </motion.div>
-    )
 }
 
