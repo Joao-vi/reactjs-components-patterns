@@ -130,8 +130,7 @@ const MediumClap = () => {
       className="relative w-[120px] h-[120px] flex justify-center items-center border border-light-text rounded-full hover-effect"
     >
       <ClapIcon
-        className={`w-[70px] stroke-primary ${clapState.isClicked ? "fill-primary" : "fill-[none]"
-          }`}
+        className={`w-[70px] stroke-primary ${clapState.isClicked ? "fill-primary" : "fill-[none]"}`}
       />
       <span
         ref={totalCountEl}
