@@ -7,7 +7,7 @@ const NavBar = () => {
     const { asPath } = useRouter()
 
     return (
-        <ul className="flex flex-col gap-3 items-stretch text-start border-r px-5 border-light-background">
+        <ul className="overflow-auto pb-[10px] flex md:flex-col gap-3 items-center md:items-stretch text-start border-r px-5 border-light-background">
             {ROUTES.map(route =>
                 <li key={route.to} className='w-full'>
                     <Link href={route.to}>
