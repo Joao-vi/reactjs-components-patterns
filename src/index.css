@@ -28,11 +28,11 @@
 
 @layer components {
   .nav-link {
-    @apply text-start cursor-pointer px-6 py-1 rounded border border-transparent hover:bg-lighter-background transition-colors;
+    @apply w-full block text-start cursor-pointer px-6 py-1 rounded border border-transparent hover:bg-lighter-background transition-colors;
   }
 
-  .nav-link.active {
-    @apply text-[#1a1a1a]  bg-light-background border-dark-background;
+  .nav-link--active {
+    @apply  bg-light-background border-dark-background;
   }
 }
 

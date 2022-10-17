@@ -1,14 +1,17 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { ROUTES } from '../routes'
 
 const NavBar = () => {
+    const { asPath } = useRouter()
+
     return (
         <ul className="flex flex-col gap-3 items-stretch text-start border-r px-5 border-light-background">
             {ROUTES.map(route =>
-                <li key={route.to} className="nav-link">
+                <li key={route.to} className='w-full'>
                     <Link href={route.to}>
-                        <a>{route.label}</a>
+                        <a className={`nav-link ${asPath === route.to ? 'nav-link--active' : ''}`}>{route.label}</a>
                     </Link>
                 </li>
             )}
